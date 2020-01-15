@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
-public class InstagramSignUpTests {
+public class InstagramLogInTest {
     private WebDriver driver;
 
     @Before
@@ -27,29 +27,16 @@ public class InstagramSignUpTests {
     }
 
     @Test
-    public void signUpWithNotUniqueUserName() {
+    public void logInWithExistingAccount() {
         InstagramStartPage startPage = new InstagramStartPage(driver);
-        startPage.setMobileNumberOrEmail(Helpers.getUniqueEmail());
-        startPage.setFullName("someFirstName someLastName");
-//        this userName is already used
-        startPage.setUsername("userName");
-        startPage.setPassword("P@ssw0rd");
-        startPage.clickSignUpButtonExpectingFailure();
-        assertEquals("This username isn't available. Please try another.", startPage.getErrorMessage());
-    }
-
-    @Test
-    public void signUp() {
-        InstagramStartPage startPage = new InstagramStartPage(driver);
-        startPage.setMobileNumberOrEmail(Helpers.getUniqueEmail());
-        String userName = Helpers.getUniqueUserName();
-        startPage.setUsername(userName);
-        String fullName = "someFirstName someLastName";
-        startPage.setFullName(fullName).setPassword("P@ssw0rd");
-        InstagramNotificationsForm instagramNotificationsForm = startPage.clickSignUpButton();
+        InstagramLogInPage logInPage = startPage.clickLogInLink();
+        String userName = "test1575682202313";
+        logInPage.setUsername(userName).setPassword("P@ssw0rd");
+        InstagramNotificationsForm instagramNotificationsForm = logInPage.clickLogInButton();
         InstagramSuggestionsForYouPage suggestionsForYouPage = instagramNotificationsForm.clickNotNowButton();
         InstagramProfilePage profilePage = suggestionsForYouPage.clickProfileButton();
         assertEquals("UserName", userName, profilePage.getUserName());
+        String fullName = "someFirstName someLastName";
         assertEquals("Full Name", fullName, profilePage.getFullName());
         assertEquals("Title", String.format("%s (@%s) • Instagram photos and videos", fullName, userName), profilePage.getTitle());
     }
