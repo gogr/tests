@@ -1,4 +1,4 @@
 target
 .idea
 /ui-test-framework.iml
-**/.iml
+**/*.iml
