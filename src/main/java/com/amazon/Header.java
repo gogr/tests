@@ -1,28 +1,28 @@
 package com.amazon;
 
+import io.cucumber.java.en.And;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+
+import static com.WebDriverFactory.getDriver;
+import static org.junit.Assert.assertEquals;
 
 public class Header {
-    private WebDriver driver;
+    private final By searchCriteriaInput = By.id("twotabsearchtextbox");
 
-    public Header(WebDriver driver) {
-        this.driver = driver;
-    }
-
+    @And("^I set (.*) as search criteria on header$")
     public Header setSearchCriteria(String searchCriteria) {
-        driver.findElement(By.id("twotabsearchtextbox")).sendKeys(searchCriteria);
-//        driver.findElement(By.xpath("//*[@id=\"twotabsearchtextbox\"]")).sendKeys(searchCriteria);
+        getDriver().findElement(searchCriteriaInput).sendKeys(searchCriteria);
         return this;
     }
 
+    @And("^I click search button on header$")
     public SearchResultsPage clickSearchButton() {
-        driver.findElement(By.xpath("//input[@value='Go']")).click();
-//        driver.findElement(By.xpath("//*[@value=\"Go\"]")).click();
-        return new SearchResultsPage(driver);
+        getDriver().findElement(By.xpath("//input[@value='Go']")).click();
+        return new SearchResultsPage();
     }
 
-    public String getSearchCriteria(){
-        return driver.findElement(By.id("twotabsearchtextbox")).getAttribute("value");
+    @And("^Search criteria (.*) is set on header$")
+    public void verifySearchCriteria(String searchCriteria) {
+        assertEquals(searchCriteria, getDriver().findElement(searchCriteriaInput).getAttribute("value"));
     }
 }
